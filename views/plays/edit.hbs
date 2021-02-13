@@ -3,18 +3,18 @@
         <h1>Edit Theater</h1>
         <div>
             <label for="title">Theater Title:</label>
-            <input type="text" id="title" placeholder="Theater name" value="{{title}}">
+            <input type="text" id="title" name="title" placeholder="Theater name" value="{{title}}">
         </div>
         <div>
             <label for="description">Theater Description:</label>
-            <textarea id="description" placeholder="Description">{{description}}</textarea>
+            <textarea id="description" name="description" placeholder="Description">{{description}}</textarea>
         </div>
         <div>
             <label for="imageUrl">Image url:</label>
-            <input type="text" id="imageUrl" placeholder="Image Url" value="{{imageUrl}}">
+            <input type="text" id="imageUrl" name="imageUrl" placeholder="Image Url" value="{{imageUrl}}">
         </div>
         <div class="check">
-            <input type="checkbox" id="check-box">
+            <input type="checkbox" id="check-box" name="isPublic" {{#if isPublic}}checked{{/if}}>
             <label for="check-box">Public</label>
         </div>
         <button class="btn" type="submit">Submit</button>

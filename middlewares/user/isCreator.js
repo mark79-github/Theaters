@@ -1,14 +1,14 @@
-// const productService = require('../../services/productService');
+const {playService} = require('../../services');
 
 module.exports = async (req, res, next) => {
     if (req.user) {
-//        courseService.getById(req.params.courseId)
-//            .then((course) => {
-//                res.locals.isCreator = course.creator._id.toString() === req.user.id.toString();
-//                res.locals.isEnrolled = course.usersEnrolled.some(value => {
-//                    return value._id.toString() === req.user.id.toString();
-//                })
-//            });
+        playService.getById(req.params.playId)
+            .then((play) => {
+                res.locals.isCreator = play.creator._id.toString() === req.user.id.toString();
+                res.locals.isLiked = play.usersLiked.some(value => {
+                    return value._id.toString() === req.user.id.toString();
+                });
+            });
     }
 
     next();
