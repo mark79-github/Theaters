@@ -41,10 +41,8 @@ router.get('/register', isGuest, (req, res) => {
 });
 
 router.post('/register', isGuest, validate.user.register, (req, res) => {
-    console.log('before register');
     userService.register(req.body)
-        .then((user) => {
-            console.log(user);
+        .then(() => {
             res.redirect('/users/login');
         })
         .catch(error => {

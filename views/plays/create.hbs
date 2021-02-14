@@ -14,7 +14,7 @@
             <input type="text" id="imageUrl" name="imageUrl" placeholder="Image Url" value="{{imageUrl}}">
         </div>
         <div class="check">
-            <input type="checkbox" name="isPublic" id="check-box">
+            <input type="checkbox" name="isPublic" id="check-box" {{#if isPublic}}checked{{/if}}>
             <label for="check-box">Public</label>
         </div>
         <button class="btn" type="submit">Submit</button>

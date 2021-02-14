@@ -5,8 +5,6 @@ module.exports = {
         register(req, res, next) {
             const {username, password, repeatPassword} = req.body;
 
-            console.log('req.body', req.body);
-
             let user = {
                 errors: [],
             };
@@ -69,5 +67,79 @@ module.exports = {
             }
             res.render('users/login', {...user, message: user.errors.shift()})
         },
+    },
+    play: {
+        create(req, res, next) {
+            const {title, description, imageUrl, isPublic} = req.body;
+
+            let play = {
+                errors: [],
+            };
+
+            if (title.trim().length === 0) {
+                play.errors.push(msg.TITLE_MIN_LENGTH);
+            } else {
+                play.title = title.trim();
+            }
+
+            if (description.trim().length === 0 || description.trim().length > constants.DESCRIPTION_MAX_LENGTH) {
+                play.errors.push(msg.DESCRIPTION_LENGTH);
+            } else {
+                play.description = description.trim();
+            }
+
+            if (imageUrl.trim().length === 0) {
+                play.errors.push(msg.IMAGE_URL_MIN_LENGTH);
+            } else {
+                play.imageUrl = imageUrl.trim();
+            }
+
+            if (isPublic) {
+                play.isPublic = true;
+            }
+
+            if (!play.errors.length) {
+                next();
+                return;
+            }
+            res.render('plays/create', {...play, message: play.errors.shift()});
+
+        },
+        edit(req, res, next) {
+            const {title, description, imageUrl, isPublic} = req.body;
+
+            let play = {
+                errors: [],
+            };
+
+            if (title.trim().length === 0) {
+                play.errors.push(msg.TITLE_MIN_LENGTH);
+            } else {
+                play.title = title.trim();
+            }
+
+            if (description.trim().length === 0 || description.trim().length > constants.DESCRIPTION_MAX_LENGTH) {
+                play.errors.push(msg.DESCRIPTION_LENGTH);
+            } else {
+                play.description = description.trim();
+            }
+
+            if (imageUrl.trim().length === 0) {
+                play.errors.push(msg.IMAGE_URL_MIN_LENGTH);
+            } else {
+                play.imageUrl = imageUrl.trim();
+            }
+
+            if (isPublic) {
+                play.isPublic = true;
+            }
+
+            if (!play.errors.length) {
+                next();
+                return;
+            }
+
+            res.render('plays/edit', {...play, message: play.errors.shift()});
+        }
     }
 }

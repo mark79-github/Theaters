@@ -1,40 +1,27 @@
-const {Play, User} = require('../models');
+const {Play} = require('../models');
 
 function getAll(query, isLogged) {
 
     if (!isLogged) {
         // List the top three (3) public plays ordered by the count of likes in descending order.
-        return Play.aggregate([
-            {$project: {title: 1, imageUrl: 1, usersLiked: 1, isPublic: 1, like: {$size: '$usersLiked'}}},
-            {$limit: 3},
-            {$match: {isPublic: true}}
-        ]).sort({like: -1});
+        return Play.aggregate()
+            .match({isPublic: true})
+            .addFields({likes: {$size: '$usersLiked'}})
+            .sort({likes: -1})
+            .limit(3);
     } else {
         // List all public plays sorted in descending order by the created time
         if (!query.hasOwnProperty('sort')) {
-            return Play.aggregate([{
-                $project: {
-                    title: 1,
-                    imageUrl: 1,
-                    createdAt: 1,
-                    usersLiked: 1,
-                }
-            }]).sort({createdAt: -1});
+            return Play.aggregate()
+                .match({isPublic: true})
+                .sort({createdAt: -1});
         } else {
-            return Play.aggregate([{
-                $project: {
-                    title: 1,
-                    imageUrl: 1,
-                    createdAt: 1,
-                    usersLiked: 1,
-                    like: {
-                        $size: '$usersLiked'
-                    }
-                }
-            }]).sort({[query.sort]: -1});
+            return Play.aggregate()
+                .match({isPublic: true})
+                .addFields({likes: {$size: '$usersLiked'}})
+                .sort({[query.sort]: -1});
         }
     }
-
 }
 
 function getById(playId) {

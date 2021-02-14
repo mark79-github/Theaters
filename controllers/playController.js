@@ -1,6 +1,6 @@
 const {Router} = require('express');
 const {playService} = require('../services');
-const {isLogged, isGuest, isCreator, validate} = require('../middlewares');
+const {isLogged, isCreator, validate} = require('../middlewares');
 
 const router = Router();
 
@@ -12,11 +12,11 @@ router.get('/', (req, res, next) => {
         .catch(next);
 });
 
-router.get('/create', (req, res) => {
+router.get('/create', isLogged, (req, res) => {
     res.render('plays/create');
 });
 
-router.post('/create', (req, res, next) => {
+router.post('/create', isLogged, validate.play.create, (req, res, next) => {
     playService.create(req.body, req.user.id)
         .then(() => {
             res.redirect('/');
@@ -24,7 +24,7 @@ router.post('/create', (req, res, next) => {
         .catch(next);
 });
 
-router.get('/details/:playId', isCreator, (req, res, next) => {
+router.get('/details/:playId', isLogged, isCreator, (req, res, next) => {
     playService.getById(req.params.playId)
         .then((play) => {
             res.render('plays/details', {...play});
@@ -33,7 +33,7 @@ router.get('/details/:playId', isCreator, (req, res, next) => {
 
 });
 
-router.get('/edit/:playId', (req, res, next) => {
+router.get('/edit/:playId', isLogged, (req, res, next) => {
     playService.getById(req.params.playId)
         .then((play) => {
             res.render('plays/edit', {...play});
@@ -41,7 +41,7 @@ router.get('/edit/:playId', (req, res, next) => {
         .catch(next);
 })
 
-router.post('/edit/:playId', (req, res, next) => {
+router.post('/edit/:playId', isLogged, validate.play.edit, (req, res, next) => {
     playService.edit(req.params.playId, req.body)
         .then((play) => {
             res.redirect(`/plays/details/${play._id}`);
@@ -49,7 +49,7 @@ router.post('/edit/:playId', (req, res, next) => {
         .catch(next);
 });
 
-router.get('/delete/:playId', (req, res, next) => {
+router.get('/delete/:playId', isLogged, (req, res, next) => {
     playService.remove(req.params.playId)
         .then(() => {
             res.redirect('/');
@@ -57,7 +57,7 @@ router.get('/delete/:playId', (req, res, next) => {
         .catch(next);
 });
 
-router.get('/like/:playId', (req, res, next) => {
+router.get('/like/:playId', isLogged, (req, res, next) => {
     playService.like(req.params.playId, req.user.id)
         .then((play) => {
             res.redirect(`/plays/details/${play._id}`);
